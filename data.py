@@ -73,9 +73,9 @@ def createproducts() -> None:
 
 
 def create_order_items() -> None:
-    order_id = 2
-    product_id = 77
-    quantity = 10
+    order_id = 3
+    product_id = 78
+    quantity = 5
     try:
         # get order by id
         order = db.query(Order).where(Order.id == order_id).scalar()
@@ -95,12 +95,21 @@ def create_order_items() -> None:
         # get order_item by order id and product id
         order_item = db.query(OrderItem).where(OrderItem.product_id == product_id).where(OrderItem.order_id == order_id).scalar()
 
+        print(order)
+        new_order_item = OrderItem(order_id=order_id, product_id=product_id, quantity=quantity)
+
         if order_item == None:
-            order.order_items.append(OrderItem(order_id=order_id, product_id=product_id, quantity=quantity))
+            db.add(new_order_item)
+            db.commit()
+            order.append(new_order_item)
         else:
             order_item.quantity += quantity
-        
-        print(order_item)
+
+        print("1")
+        order.set_total_price(quantity)
+        # db.commit()
+
+
     except Exception as e:
         print(e)
         db.rollback()
@@ -131,9 +140,14 @@ def create_clients() -> None:
     db.commit()
 
 if __name__=='__main__':
+    pass
     # create_catalog()
     # createproducts()
-    create_order_items()
-    # create_orders()
+    # order = db.query(OrderItem).where(OrderItem.product_id == 77).where(OrderItem.order_id == 2).first()
+    # print(order)
     # create_clients()
+    # create_orders()
+
+    # create_order_items()
+
 

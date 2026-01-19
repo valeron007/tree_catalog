@@ -1,8 +1,6 @@
 python -m venv venv
-
 docker ps
 docker stop $(docker ps -q)
-
 docker compose up
 docker compose down
 docker-compose ps
@@ -35,6 +33,9 @@ alembic revision -m "Description of your migration"
 alembic upgrade 159c582c0a4f
 alembic upgrade head
 alembic -c upgrade head
+alembic downgrade 7b024f2888ac
+
+
 
 uvicorn main:app
 
