@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+pytest
+SQLAlchemy
+charset-normalizer
+psycopg2-binary
+starlette
+alembic
+bcrypt
+pydantic
+pyjwt
+python-decouple
+asyncpg
+asyncio
+phonenumbers
+faststream
+aiogram

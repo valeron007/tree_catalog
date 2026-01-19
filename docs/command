@@ -1,0 +1,81 @@
+python -m venv venv
+
+docker ps
+docker stop $(docker ps -q)
+
+docker compose up
+docker compose down
+docker-compose ps
+
+docker exec -it postgres sh
+
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' postgres
+
+docker network create --gateway 172.19.1.1 --subnet 172.19.1.0/24 fstapi_static-network
+
+docker network ls
+
+docker network rm fstapi_static-network
+
+docker network create --gateway 172.16.1.1 --subnet 172.16.1.0/24 --scope swarm app_subnet
+
+pip install pip-tools
+
+pip-compile
+pip-sync
+
+alembic init alembic
+
+alembic --config 
+
+alembic revision --autogenerate -m 'initial'
+
+alembic revision -m "Description of your migration"
+
+alembic upgrade 159c582c0a4f
+alembic upgrade head
+alembic -c upgrade head
+
+uvicorn main:app
+
+sudo netstat -plunt |grep postgres
+
+# front
+
+ npm start
+    Starts the development server.
+
+  npm run build
+    Bundles the app into static files for production.
+
+  npm test
+    Starts the test runner.
+
+  npm run eject
+    Removes this tool and copies build dependencies, configuration files
+    and scripts into the app directory. If you do this, you can’t go back!
+
+We suggest that you begin by typing:
+
+  cd frontend
+  npm start
+
+
+npm run build
+# after build
+
+npm install -g serve
+serve -s build
+
+
+
+redis
+redis://username:password@193.3.298.206:6380/0
+pip3 install redis
+redis-cli -h 172.25.1.6 -p 6379
+
+docker exec -it bot-redis redis-cli
+
+KEYS *
+
+
