@@ -17,7 +17,6 @@ def create_order(order_data: OrderModel, db:Session = Depends(get_db)):
         order = db.query(Order).where(Order.id == order_data.id).scalar()
         # get product by id
         product = db.query(Product).where(Product.id == order_data.product_id).scalar()
-        # product.count -= order_data.quantity
         # check exists order
         if order == None:
             return HTTPException(status_code=404, detail=f"Order %{order_data.id} not found!")
@@ -25,17 +24,18 @@ def create_order(order_data: OrderModel, db:Session = Depends(get_db)):
         if product == None:
             return HTTPException(status_code=404, detail=f"Product %{order_data.product_id} not found!")
 
-        print(order_data)
         order_item = db.query(OrderItem).where(OrderItem.product_id == order_data.product_id).where(OrderItem.order_id == order_data.id).first()
-        print(order_item)
 
         if order_item == None:
             new_order_item = OrderItem(order_id=order_data.id, product_id=order_data.product_id, quantity=order_data.quantity)
             db.add(new_order_item)
-            db.commit()
             order.append(new_order_item)
+            db.commit()
         else:
-            order_item.quantity += order_data.quantity
+            print(f"order_data.quantity={order_data.quantity}")
+            print(f"before update quantity={order_item.quantity}")
+            order_item.quantity = order_data.quantity
+            print(f"after update quantity={order_item.quantity}")
         
         order.set_total_price(order_data.quantity)
     except Exception as error:

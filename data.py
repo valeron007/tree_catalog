@@ -140,14 +140,10 @@ def create_clients() -> None:
     db.commit()
 
 if __name__=='__main__':
-    pass
-    # create_catalog()
-    # createproducts()
-    # order = db.query(OrderItem).where(OrderItem.product_id == 77).where(OrderItem.order_id == 2).first()
-    # print(order)
-    # create_clients()
-    # create_orders()
+    create_catalog()
+    createproducts()
+    create_clients()
+    create_orders()
 
-    # create_order_items()
 
 

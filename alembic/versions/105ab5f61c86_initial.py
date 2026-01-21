@@ -1,8 +1,8 @@
-"""empty message
+"""initial
 
-Revision ID: 7fd9abe8e9c5
+Revision ID: 105ab5f61c86
 Revises: 
-Create Date: 2026-01-17 19:08:20.520486
+Create Date: 2026-01-20 01:53:01.187052
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '7fd9abe8e9c5'
+revision: str = '105ab5f61c86'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -25,6 +25,7 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=100), nullable=False),
     sa.Column('parent_id', sa.Integer(), nullable=True),
+    sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
     sa.ForeignKeyConstraint(['parent_id'], ['catalogs.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -35,6 +36,7 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=50), nullable=False),
     sa.Column('address', sa.String(length=100), nullable=False),
+    sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_clients_address'), 'clients', ['address'], unique=False)
@@ -44,8 +46,8 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('total_price', sa.Numeric(precision=10, scale=2), nullable=False),
     sa.Column('status', sa.Enum('PENDING', 'PAID', 'SHIPPED', 'CANCELED', name='orderstatus'), nullable=False),
-    sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('client_id', sa.Integer(), nullable=True),
+    sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
     sa.ForeignKeyConstraint(['client_id'], ['clients.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -55,6 +57,9 @@ def upgrade() -> None:
     sa.Column('name', sa.String(length=100), nullable=False),
     sa.Column('price', sa.Numeric(precision=10, scale=2), nullable=False),
     sa.Column('catalog_id', sa.Integer(), nullable=True),
+    sa.Column('count', sa.BigInteger(), nullable=False),
+    sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
+    sa.CheckConstraint('count >= 0', name='check_count_positive'),
     sa.ForeignKeyConstraint(['catalog_id'], ['catalogs.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -65,6 +70,7 @@ def upgrade() -> None:
     sa.Column('product_id', sa.Integer(), nullable=True),
     sa.Column('quantity', sa.Numeric(precision=10, scale=2), nullable=False),
     sa.Column('order_id', sa.Integer(), nullable=True),
+    sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
     sa.ForeignKeyConstraint(['order_id'], ['orders.id'], ),
     sa.ForeignKeyConstraint(['product_id'], ['products.id'], ),
     sa.PrimaryKeyConstraint('id')

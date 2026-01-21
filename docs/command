@@ -80,3 +80,12 @@ docker exec -it bot-redis redis-cli
 KEYS *
 
 
+# def get_tree(base_page, dest_dict):
+#     dest_dict = { 'title': base_page.title, 'content': base_page.content }
+#     children = base_page.children
+#     if children:
+#         dest_dict['children'] = {}
+#         for child in children:
+#             get_tree(child, dest_dict)
+#     else:
+#         return

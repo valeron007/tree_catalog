@@ -1,16 +1,13 @@
 import enum
-from datetime import datetime
-from email.policy import default
-from typing import Optional, Any
-
 import sqlalchemy.orm as orm
 from sqlalchemy.orm import DeclarativeBase, relationship, attribute_mapped_collection, backref, Mapped, mapped_column
 from sqlalchemy import Integer, String, ForeignKey, Column, Numeric, Enum, DateTime, \
-    func
+    func, BigInteger, CheckConstraint
 
 
 class Base(DeclarativeBase):
     __abstract__ = True
+    created_at = orm.mapped_column(DateTime(timezone=True), server_default=func.now())
 
 class Catalog(Base):
     __tablename__ = 'catalogs'
@@ -93,7 +90,6 @@ class Order(Base):
 
     total_price: orm.Mapped[float] = orm.mapped_column(Numeric(precision=10, scale=2), default=0)
     status: orm.Mapped[OrderStatus] = orm.mapped_column(Enum(OrderStatus))
-    created_at: orm.Mapped[datetime] = orm.mapped_column(DateTime(timezone=True), server_default=func.now())
     client_id = Column(Integer, ForeignKey("clients.id"))
     client = orm.relationship("Client", back_populates="orders")
     order_items = orm.relationship("OrderItem", back_populates="order", collection_class=attribute_mapped_collection('id'))
@@ -119,14 +115,9 @@ class Product(Base):
     catalog_id = Column(Integer, ForeignKey("catalogs.id"))
     catalog = orm.relationship("Catalog", back_populates="products")
     order_items = orm.relationship("OrderItem", back_populates="product")
-    count = Column(Integer)
+    count = Column(BigInteger, nullable=False, default=0)
 
-# def get_tree(base_page, dest_dict):
-#     dest_dict = { 'title': base_page.title, 'content': base_page.content }
-#     children = base_page.children
-#     if children:
-#         dest_dict['children'] = {}
-#         for child in children:
-#             get_tree(child, dest_dict)
-#     else:
-#         return
+
+    __table_args__ = (
+        CheckConstraint('count >= 0', name='check_count_positive'),
+    )
