@@ -12,6 +12,7 @@ WITH RECURSIVE cat AS (
           ON catalogs.parent_id = cat.id
 )
 
+SELECT DISTINCT COUNT(*) FROM cat WHERE level = 1;
 SELECT DISTINCT * FROM cat WHERE level = 1;
 
 --

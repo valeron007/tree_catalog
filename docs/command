@@ -5,6 +5,8 @@ docker compose up
 docker compose down
 docker-compose ps
 
+docker compose up --builddocker compose up --build
+
 docker exec -it postgres sh
 
 docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' postgres
@@ -16,6 +18,8 @@ docker network ls
 docker network rm fstapi_static-network
 
 docker network create --gateway 172.16.1.1 --subnet 172.16.1.0/24 --scope swarm app_subnet
+
+docker logs --since=1h '63ef1020394b' > ./logs/log.txt
 
 pip install pip-tools
 
@@ -34,8 +38,6 @@ alembic upgrade 159c582c0a4f
 alembic upgrade head
 alembic -c upgrade head
 alembic downgrade 7b024f2888ac
-
-
 
 uvicorn main:app
 
@@ -89,3 +91,19 @@ KEYS *
 #             get_tree(child, dest_dict)
 #     else:
 #         return
+
+linux commands
+
+1. sudo ss -tulpn | grep :8080
+2. sudo lsof -i :8080
+3. sudo netstat -tulpn | grep :5433
+
+postgresql command
+
+1 Create backup
+    pg_dump -U valeron -h 172.40.1.3 -p 5432 -d tree > outputfile.sql
+
+2.
+psql -U valeron -d tree -h 172.40.1.3 -f ./backup/tree.sql
+
+
